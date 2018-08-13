@@ -1,0 +1,5 @@
+requests
+docopt
+sqlparse
+dateutil
+git+https://github.com/fgassert/cartosql.py.git#master
