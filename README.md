@@ -6,7 +6,7 @@ new start and end time query.
 ## Install
 
 ```
-git clone https://fgassert/rw-freeze-layer.git
+git clone https://github.com/fgassert/rw-freeze-layer.git
 cd rw-freeze-layer
 pip install -r requirements.txt
 ```
