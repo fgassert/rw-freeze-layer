@@ -13,15 +13,20 @@ pip install -r requirements.txt
 
 ## Usage
 
-**Command line interative** 
+**Option 1. With Docker**
 
-Keys are read from the environment, so must be set first. 
+1. Save your keys to an environment file `.env`
+```
+CARTO_USER=<username>
+CARTO_KEY=<carto_key>
+RW_API_KEY=<rw_api_key>
+```
 
-```
-export CARTO_USER=<username>
-export CARTO_KEY=<carto_key>
-export RW_API_KEY=<rw_api_key>
-```
+2. Start script builds and runs a container with interactive.
+`./start.sh`
+
+
+**Option 2. Command line interative** 
 
 Run `python freeze`.
 
@@ -59,7 +64,7 @@ Deleted layer: cb7fcfb6-b27f-4040-bf41-17eadd8de9cb
 Dropped table: cit_003a_air_quality_pm25_20180811_0000_20180812_0000
 ```
 
-**Python**
+**Option 3. Python**
 
 ``` python
 import freezeLayer

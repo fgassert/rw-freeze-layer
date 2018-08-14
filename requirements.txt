@@ -1,5 +1,5 @@
 requests
 docopt
 sqlparse
-dateutil
+python-dateutil
 git+https://github.com/fgassert/cartosql.py.git#master
