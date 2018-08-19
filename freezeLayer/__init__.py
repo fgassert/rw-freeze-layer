@@ -8,12 +8,13 @@ Works only for carto
 # Python 2
 from __future__ import unicode_literals
 try: from builtins import str
-except: from __builtin__ import str
+except: str = unicode
 try: string_types = (str, basestring)
 except: string_types = str
 
 import requests
 import cartosql as csql
+import cartosql.dataset
 import os
 import logging
 import sqlparse
@@ -21,6 +22,7 @@ import json
 import datetime
 import dateutil.parser
 import hashlib
+import time
 
 try: import rw_api
 except: from . import rw_api
@@ -93,6 +95,17 @@ def freezeLayer(layerId, start_date, end_date, time_field=None,
         logging.info("Table {} exists, overwriting".format(new_table))
         csql.dropTable(new_table)
     csql.createTableFromQuery(new_table, sql)
+
+    # Wait for table to appear in Carto Viz API?
+    # for some reason getting all the datasets seems to help initialize it
+    p = None
+    while not p:
+        try:
+            p = csql.dataset.setPrivacy(new_table, 'LINK')
+        except Exception as e:
+            logging.info('Waiting for dataset to be available...')
+            csql.dataset.getDatasets()
+            time.sleep(5)
 
     # 5. Create layer copy and update SQL to refer to new table
     layer_name = "{} ({} to {})".format(layer.name, start, end)
@@ -202,11 +215,11 @@ def test():
     start_time = end_time - datetime.timedelta(days=1)
     time_field = 'utc'
     table_name = 'cit_003a_air_quality_pm25'
-    layerId, table = freezeLayer(lyr, start_time, end_time, time_field, table_name, True)
-    print(('Created: ', layerId, table))
-    rw_api.Layer(layerId).delete()
+    layer, table = freezeLayer(lyr, start_time, end_time, time_field, table_name, True)
+    print(('Created: ', layer.Id, table))
+    layer.delete()
     csql.dropTable(table)
-    print(('Deleted: ', layerId, table))
+    print(('Deleted: ', layer.Id, table))
 
 
 if __name__ == "__main__":
